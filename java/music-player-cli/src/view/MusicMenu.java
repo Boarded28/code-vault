@@ -17,11 +17,14 @@ public class MusicMenu {
         in = new Scanner(System.in);
         mp = MediaPlayer.getInstance();
 
-        // main loop
-        Utils.clearscreen();
+        // main loop        
         while (isRunning) {
+            Utils.clearscreen();
             showmenu();
-            userChoice(Utils.readInt(Utils.readLine(in), 0, 4, ()->{Utils.clearscreen();showPlaylist();}));
+            userChoice(Utils.readInt(Utils.readLine(in), in, 0, 4, () -> {
+                Utils.clearscreen();
+                showmenu();
+            }));
         }
     }
 
@@ -85,8 +88,26 @@ public class MusicMenu {
             case 1 -> addSong();
             case 2 -> removeSong();
             case 3 -> showPlaylist();
-            case 4 -> showplayermenu();
+            case 4 -> {
+                while (true) {
+                    Utils.clearscreen();
+                    showplayermenu();
+                    if (playerChoice(Utils.readInt(Utils.readLine(in), in, 0, 2, () -> {
+                        Utils.clearscreen();
+                        showplayermenu();
+                    }))) break;
+                }
+            }
             case 0 -> exit();
+        }
+    }
+
+    private static boolean playerChoice(int c) {
+        switch(c) {
+            case 1 : mediaplayerI();
+            case 2 : mediaplayerI();
+            case 0 : return true;
+            default : return false;
         }
     }
 }
