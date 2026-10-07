@@ -5,7 +5,12 @@ import java.util.Scanner;
 public class Utils {
     
     public static void clearscreen() {
-        System.out.println("\033[2J");
+        System.out.println("\033[H\033[2J");
+        System.out.flush();
+    }
+
+    public static void clearscreen(boolean wipe) {
+
     }
 
     public static int generateId() {
@@ -18,7 +23,7 @@ public class Utils {
         return in.nextLine().trim();
     }
 
-    public static int readInt(String prompt, int min, int max, Runnable onError) {
+    public static int readInt(String prompt, Scanner in, int min, int max, Runnable onError) {
         while (true) {
             try {
                 int value = Integer.parseInt(prompt);
@@ -27,7 +32,8 @@ public class Utils {
                 return value;
             } catch (NumberFormatException e) {
                 onError.run();
+                return readInt(readLine(in), in, min, max, onError);
             }
         }
-    }
+    }    
 }
