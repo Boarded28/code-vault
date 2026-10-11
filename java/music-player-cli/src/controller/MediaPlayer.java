@@ -9,15 +9,15 @@ public class MediaPlayer implements Runnable {
 
     MediaPlayer() {
         mt = new MusicTracker();
-        mediaThread = new Thread(this);        
+        mediaThread = new Thread(this);
         mediaThread.start();
     }
 
     public static MediaPlayer getInstance() { return (instance == null) ? instance = new MediaPlayer() : instance; }
 
-    public String getSongTitle() { return mt.getCurrent().getTitle(); }
+    public String getSongTitle() { return (mt.getCurrent() == null) ? null : mt.getCurrent().getTitle(); }
 
-    public String getArtistName() { return mt.getCurrent().getArtist(); }
+    public String getArtistName() { return (mt.getCurrent() == null) ? null : mt.getCurrent().getArtist(); }
 
     @Override 
     public void run() {
