@@ -30,6 +30,7 @@ public class MusicMenu {
 
     private static void showmenu() {
         System.out.print("""
+
         __________________________
         === Welcome to MsP CLI ===
         |[1] Add song            |
@@ -60,6 +61,8 @@ public class MusicMenu {
 
     private static void showplayermenu() {
         System.out.print("""
+
+        ____________________
         === media player ===
         |[1] Play          |
         |[2] Shuffle       |
@@ -71,6 +74,10 @@ public class MusicMenu {
     private static void mediaplayerI() {
         String title = mp.getSongTitle();
         String artist = mp.getArtistName();
+        int titleLen = (title == null) ? 3 : title.length();
+        int artistLen = (artist == null) ? 3 : artist.length();
+        if (title == null || artist == null) System.out.print("\n<Playlist is empty. Try adding your music!>\n");
+
         System.out.printf("""
         ______________________________________________
         ============== Media Player CLI ==============
@@ -78,9 +85,9 @@ public class MusicMenu {
         | %s%s|
         | Artist: %s%s|
         | ------------------------------------------ |
-        | [P]rev  [N]ext  [Enter]Pause/Play          |
+        | [P]rev  [N]ext  [Enter]Pause/Play  [B]ack  |
         ==============================================
-        [player]$\s""", title, " ".repeat(42-title.length()), " ".repeat(34-artist.length()));
+        [player]$\s""", title, " ".repeat(42-titleLen), artist, " ".repeat(34-artistLen));
     }
 
     private static void userChoice(int c) {        
@@ -103,11 +110,34 @@ public class MusicMenu {
     }
 
     private static boolean playerChoice(int c) {
-        switch(c) {
-            case 1 : mediaplayerI();
-            case 2 : mediaplayerI();
-            case 0 : return true;
-            default : return false;
+        switch (c) {
+            case 1 -> {
+                while (true) {
+                    Utils.clearscreen();
+                    mediaplayerI();
+                    if (mediaPlayerChoice(Utils.readLine(in))) break;
+                }
+                return true;                
+            }
+            case 2 -> {
+                mediaplayerI();
+                return true;
+            }
+            case 0 -> {return true;}
+            default -> {return false;}
         }
+    }
+
+    private static boolean mediaPlayerChoice(String c) {
+        switch (c.toUpperCase()) {
+            case "P" -> {return false;}
+            case "N" -> {return false;}
+            case "B" -> {return true;}
+            case "\n" -> {
+                System.out.println("<Pressed Enter>");
+                return false;
+            }
+            default -> {return false;}
+        }        
     }
 }
