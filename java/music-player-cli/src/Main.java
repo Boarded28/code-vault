@@ -1,6 +1,6 @@
 public class Main {
     public static void main(String[] args) {
-        view.MusicMenu.open();
+        // TODO: New architecture, using ui -> reader/parser -> dispatcher -> handler -> state
     }
 
 }
