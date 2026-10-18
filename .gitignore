@@ -28,11 +28,11 @@ release.properties
 .gradle/
 build/
 
-# IDE files (IntelliJ, Eclipse, NetBeans)
+# IDE files (IntelliJ, Eclipse, NetBeansm VSCode)
 .idea/
 *.iml
 .settings/
 .classpath
 .project
 nbproject/private/
-
+.vscode

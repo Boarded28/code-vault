@@ -1,5 +1,0 @@
-package dispatcher;
-
-public class Dispatcher {
-    // TODO
-}
