@@ -1,0 +1,2 @@
+SCRIPT_DIR="$(dirname "$(realpath "$0")")"
+java -cp "$SCRIPT_DIR/bin" JP3 "$@"
