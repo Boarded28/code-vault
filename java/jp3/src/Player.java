@@ -1,4 +1,5 @@
-import javazoom.jl.*;
+import javazoom.jl.player.*;
+import javazoom.jl.decoder.*;
 
 class Player {  
 
