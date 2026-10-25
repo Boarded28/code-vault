@@ -31,8 +31,9 @@ public class JP3 {
             case "play" -> {
                 if (args.length < 2) {
                     System.out.println("Invalid command usage: use \'help\' to list all commands");
-                    return;                                
-                Player.play(args);
+                    return;
+                }                         
+                Player.play(args);                
             }
 
             default -> {
