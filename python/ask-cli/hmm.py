@@ -12,7 +12,6 @@ if len(args) != 2:
     print("Error: Invalid command usage")
     print("Usage: hmm \"your prompt\"")
     sys.exit(1)
-print("Valid argument")
 
 # check env
 API_KEY=os.environ.get(API_ENV)
@@ -20,7 +19,6 @@ if not API_KEY:
     print(f"\'{API_ENV}\' environment variable not found")
     print("Please set your environment variable and try again")
     sys.exit(1)
-print("API key found")
 
 # build url, header, payload
 url=f"https://{BASE_URL}/{VERSION}/models/{MODEL}:{METHOD}"
@@ -30,21 +28,46 @@ headers={
 }
 
 data={
-    "contents": [
+  "contents": [
+    {
+      "role": "user",
+      "parts": [
         {
-            "parts": [
-                {
-                    "text": args[1]
-                }
-            ]
+          "text": args[1]
         }
+      ]
+    }
+  ],
+  "systemInstruction": {
+    "parts": [
+      {
+        "text": "You are a concise command-line utility assistant."
+      }
     ]
+  },
+  "generationConfig": {
+    "thinkingConfig": {
+      "thinkingBudget": 0
+    },
+    "maxOutputTokens": 2048,
+    "responseMimeType": "text/plain"
+  },
+  "safetySettings": [
+    {
+      "category": "HARM_CATEGORY_HATE_SPEECH",
+      "threshold": "BLOCK_LOW_AND_ABOVE"
+    },
+    {
+      "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+      "threshold": "BLOCK_NONE"
+    }
+  ]
 }
-print(API_KEY)
-print(f"Making a request to {url}...")
+
+print(f"Hmm...*pondering*")
 
 try:
-    response = requests.post(url=url, headers=headers, json=data, timeout=5.0)
+    response = requests.post(url=url, headers=headers, json=data, timeout=120.0)
     parsed_json = response.json()
 
     if "error" in parsed_json:

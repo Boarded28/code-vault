@@ -11,7 +11,7 @@ class Player {
           System.out.println("skipping path: "+path);
           continue;
         }
-      }      
+      }
     });
 
     musicThread.start();
