@@ -33,7 +33,7 @@ public class JP3 {
                     System.out.println("Invalid command usage: use \'help\' to list all commands");
                     return;
                 }                         
-                Player.play(args);
+                AudioPlayer.play(args);
             }
 
             default -> {
