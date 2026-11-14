@@ -2,7 +2,7 @@ public class JP3 {
 
     static String version = "jp3 0.0.1 pre-alpha";
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         if (args.length == 0) {
             System.out.println("Unknown command: usage \'jp3 <option>\'");
             return;
@@ -29,16 +29,18 @@ public class JP3 {
             }
 
             case "play" -> {
-                if (args.length < 2) {
+                if (args.length != 2) {
                     System.out.println("Invalid command usage: use \'help\' to list all commands");
-                    return;
-                }
-                AudioPlayer.play(args);
+                } else AudioPlayer.play(args[1]);
             }
 
-            case "stop" -> {}
+            case "stop" -> {
+                System.out.println("jp3: "+(AudioPlayer.stop() ? "stopped playing" : "no music playing"));
+            }
 
-            case "status" -> {}
+            case "status" -> {
+                System.out.println();
+            }
 
             default -> {
                 System.out.println("Unknown command: use \'jp3 help\' to list all commands");
