@@ -1,6 +1,6 @@
 public class JP3 {
 
-    static String version = "jp3 0.0.1 beta";
+    static String version = "jp3 0.0.1 pre-alpha";
 
     public static void main(String[] args) {
         if (args.length == 0) {
@@ -12,7 +12,7 @@ public class JP3 {
             case "help" -> {
                 System.out.println("""
                 usage: jp3 <option> ...
-                
+
                 Options:
                     version                          : shows the program's current version
                     help                             : shows the list of options and usage
@@ -20,7 +20,7 @@ public class JP3 {
                                                        Filetypes: .mp3, .wav
                     stop                             : stops playing and kills the process
                     status                           : shows the status of the player
-                                                       Status: playing <song>, sleeping            
+                                                       Status: playing <song>, sleeping
                 """);
             }
 
@@ -32,9 +32,13 @@ public class JP3 {
                 if (args.length < 2) {
                     System.out.println("Invalid command usage: use \'help\' to list all commands");
                     return;
-                }                         
+                }
                 AudioPlayer.play(args);
             }
+
+            case "stop" -> {}
+
+            case "status" -> {}
 
             default -> {
                 System.out.println("Unknown command: use \'jp3 help\' to list all commands");
@@ -42,5 +46,5 @@ public class JP3 {
         }
 
     }
-    
+
 }

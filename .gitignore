@@ -1,3 +1,6 @@
+# my custom root marker
+.root
+
 # Compiled Java classes and directories
 *.class
 bin/

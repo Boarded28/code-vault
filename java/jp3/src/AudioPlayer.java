@@ -1,6 +1,5 @@
 import javazoom.jl.player.*;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.nio.file.Paths;
@@ -19,9 +18,9 @@ class AudioPlayer {
 
         try {
           if (absPath.endsWith(".wav")) {
-            
+            playWAV(path.toString());
           } else if (absPath.endsWith(".mp3")) {
-
+            playMP3(path.toString());
           } else {
             System.out.println("\'"+absPath+"\' is not a valid file/path");
           }
@@ -32,8 +31,6 @@ class AudioPlayer {
     });
 
     musicThread.start();
-    if (!musicThread.isAlive())
-      System.out.println("JP3 music player stopped.");
   }
 
   private static void playMP3(String path) throws JavaLayerException, FileNotFoundException {
