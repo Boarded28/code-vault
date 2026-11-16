@@ -1,74 +1,39 @@
-import java.io.IOException;
-import java.net.UnixDomainSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.SocketChannel;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class JP3 {
+    
     public static void main(String[] args) {
-        if (args.length < 1) {
-            System.out.println("Invalid command: try 'jp3 help'");
+        if (args.length == 0) {
+            System.out.println("Invalid option: try 'jp3 help'");
             return;
         }
-        var sockPath = Path.of(System.getProperty("java.io.tmpdir")).resolve("jp3-server.sock");
-        var sockAddr = check_server(sockPath);
-        System.out.println(sockAddr.toString());
-        if (sockAddr != null) {
-            try (var clientChannel = SocketChannel.open(sockAddr)) {
-                ByteBuffer buffer = null;
-                switch (args[0]) {
-                    case "play" -> buffer = ByteBuffer.wrap(String.format("SONGPATH:%s",args[1]).getBytes());
-                    case "stop" -> buffer = ByteBuffer.wrap("STOP".getBytes());
-                    case "status" -> buffer = ByteBuffer.wrap("STATUS".getBytes());
-                    case "help" -> show_help();
-                    default -> System.out.println("Invalid command: try 'jp3 help'");
-                }
-                if (buffer != null) {
-                    while (buffer.hasRemaining())
-                        clientChannel.write(buffer);
-                    buffer.clear();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+        String payload = switch (args[0]) {
+            case "-p", "play", "--play" -> { yield String.format("SONGPATH:%s",args[1]); }
+            case "-s", "stop", "--stop" -> { yield "STOP"; }
+            case "-u", "status", "--status" -> { yield "STATUS"; }
+            case "-h", "help", "--help" -> {
+                System.out.println("""
+
+                        command: jp3 <option> <file_path>
+
+                        options:                    Description:
+                        -h, --help, help        -: shows the list of commands
+                        -p, --play, play        -: plays a song from <file_path>, only supports .wav and .mp3
+                        -s, --stop, stop        -: stops the song and kills the AudioServer
+                        -u, --status, status    -: shows the current song playing in the AudioServer
+
+                        """);
+                yield null;
             }
-        } else {
-            System.out.println("jp3: error running AudioServer");
-        }
-    }
-
-    private static UnixDomainSocketAddress check_server(Path sockPath) {
-        if (!Files.exists(sockPath)) {
-            Thread serverThread = new Thread(() -> AudioServer.main(new String[]{}));
-            serverThread.setDaemon(true);
-            serverThread.start();
-            int attempts = 0;
-            while (!Files.exists(sockPath) && attempts < 50) {
-                try {
-                    Thread.sleep(50);
-                    attempts++;
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    break;
-                }
+            default -> {
+                System.out.println("Invalid option: try 'jp3 help'");
+                yield null;
             }
-            return UnixDomainSocketAddress.of(sockPath);
+        };
+
+        if (payload != null) {
+            String addr = Path.of(System.getProperty("java.io.tmpdir")).resolve("jp3-server.sock").toString();
+            System.out.println(addr);
         }
-        return null;
-    }
-
-    private static void show_help() {
-        System.out.println("""
-
-            usage: jp3 <option> <file_path>
-
-            commands:
-                play <file_path> : Decodes and plays audio from a music file
-                                   Only supports: '.mp3', '.wav'
-                stop             : Stops the entire process
-                status           : Show currently playing on track
-                help             : Shows all available commands
-
-        """);
     }
 }
