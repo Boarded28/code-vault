@@ -1,14 +1,24 @@
+import java.io.IOException;
+import java.net.UnixDomainSocketAddress;
+import java.nio.ByteBuffer;
+import java.nio.channels.SocketChannel;
 import java.nio.file.Path;
 
 public class JP3 {
-    
+
     public static void main(String[] args) {
         if (args.length == 0) {
             System.out.println("Invalid option: try 'jp3 help'");
             return;
         }
         String payload = switch (args[0]) {
-            case "-p", "play", "--play" -> { yield String.format("SONGPATH:%s",args[1]); }
+            case "-p", "play", "--play" -> { 
+                if (args.length < 2) {
+                    System.out.println("Invalid option: try 'jp3 help'");
+                    yield null;
+                }
+                yield String.format("SONGPATH:%s",args[1]); 
+            }
             case "-s", "stop", "--stop" -> { yield "STOP"; }
             case "-u", "status", "--status" -> { yield "STATUS"; }
             case "-h", "help", "--help" -> {
@@ -32,8 +42,15 @@ public class JP3 {
         };
 
         if (payload != null) {
-            String addr = Path.of(System.getProperty("java.io.tmpdir")).resolve("jp3-server.sock").toString();
-            System.out.println(addr);
+            String addr = Path.of(System.getProperty("java.io.tmpdir"))
+                .resolve("jp3-server.sock")
+                .toString();
+            var sockAddr = UnixDomainSocketAddress.of(addr);
+            try (var clientChannel = SocketChannel.open(sockAddr)) {
+                ByteBuffer outBuffer = ByteBuffer.wrap(payload.getBytes());
+                clientChannel.write(outBuffer);
+                outBuffer.clear();
+            } catch (IOException e) {e.printStackTrace();}
         }
     }
 }
