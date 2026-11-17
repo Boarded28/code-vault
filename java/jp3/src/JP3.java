@@ -43,6 +43,7 @@ public class JP3 {
 
         if (payload != null) {
             String addr = Path.of(System.getProperty("java.io.tmpdir"))
+                .toAbsolutePath()
                 .resolve("jp3-server.sock")
                 .toString();
             var sockAddr = UnixDomainSocketAddress.of(addr);
